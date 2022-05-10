@@ -1,0 +1,13 @@
+{
+        "start_date": "2022-05-01",
+        "account_id": "xxxx",
+        "property_id": "properties/xxxx",
+        "metrics": ["list of selected metrics..."],
+        "dimensions": ["list of selected dimensions..."],
+        "metrics_filter_json": "\"filter\": {\"fieldName\": \"eventCount\", \"numericFilter\": {\"operation\": \"GREATER_THAN\", \"value\": {\"int64Value\": 260}}}}",
+        "dimensions_filter_json": "{\"filter\": {\"fieldName\": \"browser\", \"stringFilter\": {\"matchType\": \"EXACT\", \"value\": \"Chrome\", \"caseSensitive\": false}}}",
+        "client_id": "xxxx",
+        "client_secret": "xxxx",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "refresh_token": "xxxx"
+    }
