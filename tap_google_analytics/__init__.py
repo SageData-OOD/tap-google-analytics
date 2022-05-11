@@ -286,8 +286,15 @@ def main():
     args = utils.parse_args(REQUIRED_CONFIG_KEYS)
 
     # We skip discovery call as SageData uses frontend to call list metrics and dimensions
+    # Dummy DiscoveryCall TO pass the arg parser
     if args.discover:
-        json.dump({}, sys.stdout, indent=2)
+        json.dump({"streams": [{
+            "tap_stream_id": "file_metadata",
+            "key_properties": [],
+            "schema": {},
+            "stream": "file_metadata",
+            "metadata": []
+            }]}, sys.stdout, indent=2)
 
     # Otherwise, run in sync mode
     else:
