@@ -156,10 +156,14 @@ def sync(config, state, catalog):
             schema=schema,
             key_properties=stream.key_properties
         )
-        
-        start_date = singer.get_bookmark(state, stream.tap_stream_id, bookmark_column) \
-            if state.get("bookmarks", {}).get(stream.tap_stream_id) else config["start_date"]
-        
+
+        if state.get("bookmarks", {}).get(stream.tap_stream_id):
+            start_date = singer.get_bookmark(state, stream.tap_stream_id, bookmark_column)
+            # 14 days of attribution window
+            start_date = str(datetime.strptime(start_date, '%Y-%m-%d').date() - timedelta(days=14))
+        else:
+            start_date = config["start_date"]
+
         payload = generate_request_payload(config)
         headers = {"Content-Type": "application/json"}
         session = requests_session()
@@ -203,7 +207,7 @@ def sync(config, state, catalog):
 
             if start_date < str(datetime.utcnow().date()):
                 start_date = str(datetime.strptime(start_date, '%Y-%m-%d').date() + timedelta(days=1))
-            if start_date >= str(datetime.utcnow().date()):
+            if start_date > str(datetime.utcnow().date()):
                 break
 
 
