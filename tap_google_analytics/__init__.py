@@ -209,8 +209,8 @@ def sync(config, state, catalog):
             state = singer.write_bookmark(state, stream.tap_stream_id, bookmark_column, start_date)
             singer.write_state(state)
 
-            if start_date < str(datetime.utcnow().date()):
-                start_date = str(datetime.strptime(start_date, '%Y-%m-%d').date() + timedelta(days=1))
+            start_date = str(datetime.strptime(start_date, '%Y-%m-%d').date() + timedelta(days=1))
+            
             if start_date > str(datetime.utcnow().date()):
                 break
 
