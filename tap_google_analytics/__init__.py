@@ -13,8 +13,7 @@ from singer.catalog import Catalog, CatalogEntry
 from singer.transform import transform
 from datetime import datetime, timedelta
 
-WORKER_THREADS = 10
-LOCK = threading.Lock()
+ATTRIBUTION_WINDOW_DAYS = 14
 LOGGER = singer.get_logger()
 ROWS_LIMIT = 100000
 HOST = "https://analyticsdata.googleapis.com/v1beta"
@@ -159,8 +158,13 @@ def sync(config, state, catalog):
 
         if state.get("bookmarks", {}).get(stream.tap_stream_id):
             start_date = singer.get_bookmark(state, stream.tap_stream_id, bookmark_column)
-            # 14 days of attribution window
-            start_date = str(datetime.strptime(start_date, '%Y-%m-%d').date() - timedelta(days=14))
+
+            # offset back start date for the bookmark because of delayed attribution
+            start_date_dt = datetime.strptime(start_date, '%Y-%m-%d').date()
+            min_start_date = datetime.utcnow() - timedelta(days=ATTRIBUTION_WINDOW_DAYS)
+
+            if start_date_dt > min_start_date:
+                start_date = str(min_start_date)
         else:
             start_date = config["start_date"]
 
