@@ -161,7 +161,7 @@ def sync(config, state, catalog):
 
             # offset back start date for the bookmark because of delayed attribution
             start_date_dt = datetime.strptime(start_date, '%Y-%m-%d').date()
-            min_start_date = datetime.utcnow() - timedelta(days=ATTRIBUTION_WINDOW_DAYS)
+            min_start_date = datetime.utcnow().date() - timedelta(days=ATTRIBUTION_WINDOW_DAYS)
 
             if start_date_dt > min_start_date:
                 start_date = str(min_start_date)
