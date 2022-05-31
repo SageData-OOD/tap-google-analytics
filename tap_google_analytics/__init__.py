@@ -18,7 +18,7 @@ LOGGER = singer.get_logger()
 ROWS_LIMIT = 100000
 HOST = "https://analyticsdata.googleapis.com/v1beta"
 ENDPOINT = {
-    "google_analytics_v4": "/{property}:runReport",
+    "ga4": "/{property}:runReport",
     "metadata": "/{property}/metadata"
 }
 
@@ -39,7 +39,7 @@ def get_key_properties(stream_name, dimensions):
     """
 
     default_key_properties = {
-        "google_analytics_v4": ["start_date", "account_id", "property_id"]
+        "ga4": ["start_date", "account_id", "property_id"]
     }
 
     return default_key_properties.get(stream_name, []) + [camel_to_snake_case(d) for d in dimensions]
@@ -276,7 +276,7 @@ def generate_schema(config):
 
 
 def create_catalog_based_on_selected_fields(config):
-    stream_name = "google_analytics_v4"
+    stream_name = "ga4"
     dimensions = config["dimensions"]
     schema = generate_schema(config)
     key_properties = get_key_properties(stream_name, dimensions)
