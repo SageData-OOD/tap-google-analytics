@@ -168,6 +168,10 @@ def sync(config, state, catalog):
         else:
             start_date = config["start_date"]
 
+        end_date = config.get("end_date", str(datetime.utcnow().date()))
+
+        assert start_date <= end_date
+
         payload = generate_request_payload(config)
         headers = {"Content-Type": "application/json"}
         session = requests_session()
@@ -211,7 +215,7 @@ def sync(config, state, catalog):
 
             start_date = str(datetime.strptime(start_date, '%Y-%m-%d').date() + timedelta(days=1))
             
-            if start_date > str(datetime.utcnow().date()):
+            if start_date > end_date:
                 break
 
 
