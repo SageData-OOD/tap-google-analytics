@@ -13,7 +13,7 @@ from singer.catalog import Catalog, CatalogEntry
 from singer.transform import transform
 from datetime import datetime, timedelta
 
-ATTRIBUTION_WINDOW_DAYS = 14
+DEFAULT_CONVERSION_WINDOW = 14
 LOGGER = singer.get_logger()
 ROWS_LIMIT = 100000
 HOST = "https://analyticsdata.googleapis.com/v1beta"
@@ -161,7 +161,8 @@ def sync(config, state, catalog):
 
             # offset back start date for the bookmark because of delayed attribution
             start_date_dt = datetime.strptime(start_date, '%Y-%m-%d').date()
-            min_start_date = datetime.utcnow().date() - timedelta(days=ATTRIBUTION_WINDOW_DAYS)
+            conversion_window = config.get("conversion_window", DEFAULT_CONVERSION_WINDOW)
+            min_start_date = datetime.utcnow().date() - timedelta(days=conversion_window)
 
             if start_date_dt > min_start_date:
                 start_date = str(min_start_date)
